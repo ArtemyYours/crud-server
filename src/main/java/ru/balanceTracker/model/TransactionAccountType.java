@@ -1,4 +1,4 @@
-package ru.balancetracker.model;
+package ru.balanceTracker.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -13,8 +13,10 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "transaction_account_type")
 @Entity
-public class TransactionAccount {
+public class TransactionAccountType {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,25 +24,21 @@ public class TransactionAccount {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "transaction_account_type_id", nullable = false)
-    private TransactionAccountType transactionAccountType;
-
-    @ManyToOne
-    @JoinColumn(name = "icon_id", nullable = false)
-    private Icon icon;
+    @Column(name = "is_money_source")
+    private boolean isMoneySource;
 
     @Column(name = "user_id")
     private String userId;
+
+    @Column(name = "is_money_destination")
+    private boolean isMoneyDestination;
 
     @Column(name = "comment")
     private String comment;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "source")
-    private List<Transaction> transactionsHereUserAsSource;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "transactionAccountType")
+    private List<TransactionAccount> transactionAccounts;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "destination")
-    private List<Transaction> transactionsHereUserAsDestination;
+
 }

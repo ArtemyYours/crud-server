@@ -1,4 +1,4 @@
-package ru.balancetracker.model;
+package ru.balanceTracker.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -13,6 +13,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "icon")
 @Entity
 public class Icon {
 

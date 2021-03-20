@@ -1,4 +1,4 @@
-package ru.balancetracker.model;
+package ru.balanceTracker.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "transaction")
 @Entity
 public class Transaction {
     @Id
@@ -19,11 +20,11 @@ public class Transaction {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "transaction_account_id", nullable = false)
+    @JoinColumn(name = "source_id", nullable = false)
     private TransactionAccount source;
 
     @ManyToOne
-    @JoinColumn(name = "transaction_account_id", nullable = false)
+    @JoinColumn(name = "destination_id", nullable = false)
     private TransactionAccount destination;
 
     @Column(name = "amount")

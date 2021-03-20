@@ -1,4 +1,4 @@
-package ru.balancetracker;
+package ru.balanceTracker;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
