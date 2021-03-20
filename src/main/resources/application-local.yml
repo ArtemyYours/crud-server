@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5000/quizer-data-db
+    username: user
+    password: 123123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
