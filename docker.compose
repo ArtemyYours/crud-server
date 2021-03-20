@@ -1,0 +1,12 @@
+tv-uploader:
+  container_name: quizer
+  image: sameersbn/postgresql:10
+  ports:
+    - "5000:5432"
+  environment:
+    - DB_USER=user
+    - DB_PASS=123123
+    - DB_NAME=quizer-data-db
+    - PG_PASSWORD=postgres
+  volumes:
+    - ./tmp/docker/tv-data-db:/var/lib/db
