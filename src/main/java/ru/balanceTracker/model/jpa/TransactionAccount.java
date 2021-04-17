@@ -1,4 +1,4 @@
-package ru.balanceTracker.model;
+package ru.balanceTracker.model.jpa;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -44,4 +44,10 @@ public class TransactionAccount {
     @JsonIgnore
     @OneToMany(mappedBy = "destination")
     private List<Transaction> transactionsHereUserAsDestination;
+
+    @Column(name = "is_deleted", columnDefinition = "boolean default false")
+    private boolean isDeleted;
+
+    @JsonIgnore
+    private double deposit;
 }

@@ -1,4 +1,4 @@
-package ru.balanceTracker.model;
+package ru.balanceTracker.model.jpa;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,18 +27,21 @@ public class Transaction {
     @JoinColumn(name = "destination_id", nullable = false)
     private TransactionAccount destination;
 
-    @Column(name = "amount")
+    @Column(name = "amount", nullable = false)
     private Double amount;
 
-    @Column(name = "transaction_date")
+    @Column(name = "transaction_date", nullable = false)
     private LocalDateTime transactionDate;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private String userId;
 
     @Column(name = "comment")
     private String comment;
 
-    @Column(name = "is_periodic")
+    @Column(name = "is_deleted", columnDefinition = "boolean default false")
+    private boolean isDeleted;
+
+    @Column(name = "is_periodic", columnDefinition = "boolean default false")
     private boolean isPeriodic;
 }

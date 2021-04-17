@@ -1,4 +1,4 @@
-package ru.balanceTracker.model;
+package ru.balanceTracker.model.jpa;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
