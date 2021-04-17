@@ -17,5 +17,8 @@ public class TransactionAccountService {
 
     }
 
-    public TransactionAccount getSumForDeposit(TransactionAccount transactionAccount)
+    public TransactionAccount getSumForDeposit(TransactionAccount transactionAccount){
+
+    return null;
+    }
 }
