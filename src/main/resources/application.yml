@@ -1,0 +1,23 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  liquibase:
+    enabled: false
+
+balance-tracker:
+  pre-jpa-liquibase:
+    enabled: true
+    change-log: classpath:liquibase/pre-jpa.xml
+    contexts: common
+    liquibase-schema: public
+    database-change-log-table: PRE_JPA_DATABASECHANGELOG
+    database-change-log-lock-table: PRE_JPA_DATABASECHANGELOGLOCK
+  post-jpa-liquibase:
+    enabled: true
+    change-log: classpath:liquibase/post-jpa.xml
+    contexts: common
+    liquibase-schema: public
+    database-change-log-table: POST_JPA_DATABASECHANGELOG
+    database-change-log-lock-table: POST_JPA_DATABASECHANGELOGLOCK

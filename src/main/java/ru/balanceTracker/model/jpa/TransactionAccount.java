@@ -48,6 +48,6 @@ public class TransactionAccount {
     @Column(name = "is_deleted", columnDefinition = "boolean default false")
     private boolean isDeleted;
 
-    @JsonIgnore
+    @Transient
     private double deposit;
 }

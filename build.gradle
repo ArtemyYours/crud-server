@@ -25,6 +25,13 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: '2.4.0', ext: 'pom'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.4.0'
 
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: '2.4.0', ext: 'pom'
+
+    compile group: 'org.liquibase', name: 'liquibase-core', version: '3.6.3'
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'

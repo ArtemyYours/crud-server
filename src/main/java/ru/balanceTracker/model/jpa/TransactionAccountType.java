@@ -21,20 +21,9 @@ public class TransactionAccountType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "is_money_source")
-    private boolean isMoneySource;
-
-    @Column(name = "user_id")
-    private String userId;
-
-    @Column(name = "is_money_destination")
-    private boolean isMoneyDestination;
-
-    @Column(name = "comment")
-    private String comment;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "account_type")
+    private AccountType accountType;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "transactionAccountType")

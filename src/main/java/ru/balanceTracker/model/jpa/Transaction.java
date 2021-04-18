@@ -42,6 +42,6 @@ public class Transaction {
     @Column(name = "is_deleted", columnDefinition = "boolean default false")
     private boolean isDeleted;
 
-    @Column(name = "is_periodic", columnDefinition = "boolean default false")
-    private boolean isPeriodic;
+    @Column(name = "is_displayed", columnDefinition = "boolean default false")
+    private boolean isDisplayed;
 }

@@ -3,8 +3,10 @@ package ru.balanceTracker.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.balanceTracker.model.dto.TransactionDTO;
+import ru.balanceTracker.model.jpa.PeriodicTransaction;
 import ru.balanceTracker.model.jpa.Transaction;
 import ru.balanceTracker.model.jpa.TransactionAccount;
+import ru.balanceTracker.repository.PeriodicTransactionRepository;
 import ru.balanceTracker.repository.TransactionAccountRepository;
 import ru.balanceTracker.repository.TransactionRepository;
 
@@ -15,12 +17,12 @@ import java.util.List;
 @AllArgsConstructor
 public class TransactionService {
     private final TransactionRepository repository;
+    private final PeriodicTransactionRepository periodicTransactionRepository;
+
     private final TransactionAccountRepository transactionAccountRepository;
 
     public Long createTransactionAndSave(TransactionDTO transactionDTO){
-        Transaction transactionToSave = convertDtoToTransaction(transactionDTO);
-        Transaction savedTransaction = repository.saveAndFlush(transactionToSave);
-
+        Transaction savedTransaction = convertAndSave(transactionDTO);
         return savedTransaction.getId();
 
     }
@@ -70,6 +72,18 @@ public class TransactionService {
         repository.save(transactionToDelete);
     }
 
+    public Long createPeriodicTransactionAndSave(TransactionDTO transactionDTO, Long timePeriod) {
+        Transaction savedTransaction = convertAndSave(transactionDTO);
+
+        PeriodicTransaction periodicTransaction = new PeriodicTransaction();
+        periodicTransaction.setRepeatMetricValue(timePeriod);
+        periodicTransaction.setTransaction(savedTransaction);
+
+        periodicTransactionRepository.saveAndFlush(periodicTransaction);
+
+        return savedTransaction.getId();
+    }
+
     private Transaction convertDtoToTransaction(TransactionDTO transactionDTO){
 
 
@@ -113,4 +127,12 @@ public class TransactionService {
         }
         return transactionToUpdate;
     }
+
+
+    private Transaction convertAndSave(TransactionDTO transactionDTO){
+        Transaction transactionToSave = convertDtoToTransaction(transactionDTO);
+        return repository.saveAndFlush(transactionToSave);
+    }
+
+
 }

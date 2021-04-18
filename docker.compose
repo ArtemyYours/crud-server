@@ -1,12 +1,18 @@
-tv-uploader:
-  container_name: balance_tracker
-  image: sameersbn/postgresql:10
-  ports:
-    - "5000:5432"
-  environment:
-    - DB_USER=user
-    - DB_PASS=123123
-    - DB_NAME=balance_tracker
-    - PG_PASSWORD=postgres
-  volumes:
-    - ./tmp/docker/tv-data-db:/var/lib/db
+version: '3.7'
+services:
+  postgres:
+    container_name: balance_tracker
+    image: postgres:10.5
+    restart: always
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=123123
+      - PG_PASSWORD=postgres
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    ports:
+      - '5000:5432'
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data

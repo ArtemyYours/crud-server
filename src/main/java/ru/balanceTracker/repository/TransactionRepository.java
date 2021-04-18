@@ -12,18 +12,20 @@ import java.util.List;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-    @Query("SELECT t " +
-            "FROM Transaction t " +
-            "WHERE t.userId = :userId " +
-            "AND t.transactionDate<=:transactionDate " +
-            "AND t.isDeleted = false " +
-            "ORDER BY t.transactionDate DESC " +
-            "LIMIT :limit " +
-            "OFFSET :offset ")
+    @Query(value = "SELECT * " +
+            "FROM transaction t " +
+            "WHERE t.user_id = :userId " +
+            "AND t.transaction_date<=:transactionDate " +
+            "AND t.is_deleted = false " +
+            "AND t.is_displayed = true " +
+            "ORDER BY t.transaction_date DESC " +
+            "OFFSET :offset " +
+            "LIMIT :limit ",
+            nativeQuery = true
+            )
     List<Transaction> findTransactionsForPage(@Param("userId") String userId,
                                               @Param("transactionDate")LocalDateTime transactionDate,
                                               @Param("offset") Integer offset,
                                               @Param("limit") Integer limit);
 
-    void deleteById(Long id);
 }

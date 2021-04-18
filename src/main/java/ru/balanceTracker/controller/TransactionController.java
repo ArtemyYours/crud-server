@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.balanceTracker.model.dto.TransactionDTO;
 import ru.balanceTracker.model.jpa.Transaction;
-import ru.balanceTracker.repository.TransactionRepository;
 import ru.balanceTracker.service.TransactionService;
 
 import java.time.LocalDateTime;
@@ -15,7 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class TransactionController {
     private final TransactionService service;
-
 
     @PostMapping("/create")
     public Long createTransaction(@RequestBody TransactionDTO transactionDTO){
@@ -40,6 +38,14 @@ public class TransactionController {
                        @RequestBody TransactionDTO transactionDTO){
         service.updateTransaction(transactionDTO, transactionId);
     }
+
+    @PostMapping("/{timePeriod}/create-periodic")
+    public Long createPeriodicTransaction(@PathVariable Long timePeriod,
+            @RequestBody TransactionDTO transactionDTO){
+        return service.createPeriodicTransactionAndSave(transactionDTO, timePeriod);
+    }
+
+
 
 
 }
