@@ -20,7 +20,7 @@ public class TransactionController {
         return service.createTransactionAndSave(transactionDTO);
     }
 
-    @GetMapping("/{userId}/{itemsPerPage}/{pageNumber}/transactions-for-user")
+    @GetMapping("/transactions-for-user/{userId}/{itemsPerPage}/{pageNumber}")
     public List<Transaction> getTransactionsForUser(@PathVariable String userId,
                                                     @PathVariable Integer itemsPerPage,
                                                     @PathVariable Integer pageNumber,
@@ -28,18 +28,18 @@ public class TransactionController {
         return service.getTransactionsPerPage(itemsPerPage, pageNumber, userId, transactionDate);
     }
 
-    @DeleteMapping("/{transactionId}/delete")
+    @DeleteMapping("/delete/{transactionId}")
     public void deleteTransaction(@PathVariable Long transactionId){
         service.deleteTransaction(transactionId);
     }
 
-    @PutMapping("/{transactionId}/update")
+    @PutMapping("/update/{transactionId}")
     public void update(@PathVariable Long transactionId,
                        @RequestBody TransactionDTO transactionDTO){
         service.updateTransaction(transactionDTO, transactionId);
     }
 
-    @PostMapping("/{timePeriod}/create-periodic")
+    @PostMapping("/create-periodic/{timePeriod}")
     public Long createPeriodicTransaction(@PathVariable Long timePeriod,
             @RequestBody TransactionDTO transactionDTO){
         return service.createPeriodicTransactionAndSave(transactionDTO, timePeriod);

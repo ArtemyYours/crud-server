@@ -21,20 +21,6 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2).select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
-                .build()
-                .apiInfo(apiInfo());
+                .build();
     }
-
-    private ApiInfo apiInfo() {
-        return new ApiInfo(
-                "Student-to-Teacher REST API",
-                "This API consist of three controllers. Student controller (CRUD operations + get al Teachers, who work with this student), " +
-                        "Teacher controller((CRUD operations + get al Students, who work with this teacher)), " +
-                        "Student-to-teacher-relation-controller(add aor delete relation student-teacher)\n ",
-                "0.99",
-                "Terms of service",
-                new Contact("Artem Kopilov", "https://github.com/ArtemyYours", "artemykopilov@gmail.com"),
-                "License of API", "API license URL", Collections.emptyList());
-    }
-
 }
