@@ -32,3 +32,7 @@ keycloak:
   bearer-only: true
   credentials:
     secret: 8ccc9d29-726a-40fc-baa9-6b87f9bbfbaf
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
