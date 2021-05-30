@@ -21,3 +21,14 @@ balance-tracker:
     liquibase-schema: public
     database-change-log-table: POST_JPA_DATABASECHANGELOG
     database-change-log-lock-table: POST_JPA_DATABASECHANGELOGLOCK
+
+keycloak:
+  auth-server-url: http://84.252.136.217:8080/auth
+  realm: balance-tracker
+  resource: balance-tracker-common
+  public-client: true
+  ssl-required: external
+  use-resource-role-mappings: true
+  bearer-only: true
+  credentials:
+    secret: 8ccc9d29-726a-40fc-baa9-6b87f9bbfbaf

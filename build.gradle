@@ -39,6 +39,13 @@ dependencies {
     compile "org.springframework.boot:spring-boot-configuration-processor"
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    implementation('org.springframework.boot:spring-boot-starter-security')
+    implementation group: 'org.springframework.security.oauth.boot', name: 'spring-security-oauth2-autoconfigure', version: '2.2.4.RELEASE'
+    implementation group: 'org.springframework.security', name: 'spring-security-data', version: '5.2.4.RELEASE'
+    implementation group: 'org.keycloak', name: 'keycloak-spring-boot-starter', version: '10.0.1'
+    implementation group: 'org.keycloak.bom', name: 'keycloak-adapter-bom', version: '10.0.1', ext: 'pom'
+
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
