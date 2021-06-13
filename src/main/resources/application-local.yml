@@ -1,0 +1,14 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5000/postgres
+    username: user
+    password: 123123
+
+balance-tracker:
+  pre-jpa-liquibase:
+    contexts: local
+  post-jpa-liquibase:
+    contexts: local

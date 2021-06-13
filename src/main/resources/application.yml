@@ -1,0 +1,44 @@
+server:
+  port: 8082
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:postgresql://84.252.142.208:5000/postgres
+    username: user
+    password: 123123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  liquibase:
+    enabled: false
+
+balance-tracker:
+  pre-jpa-liquibase:
+    enabled: true
+    change-log: classpath:liquibase/pre-jpa.xml
+    contexts: common
+    liquibase-schema: public
+    database-change-log-table: PRE_JPA_DATABASECHANGELOG
+    database-change-log-lock-table: PRE_JPA_DATABASECHANGELOGLOCK
+  post-jpa-liquibase:
+    enabled: true
+    change-log: classpath:liquibase/post-jpa.xml
+    contexts: common
+    liquibase-schema: public
+    database-change-log-table: POST_JPA_DATABASECHANGELOG
+    database-change-log-lock-table: POST_JPA_DATABASECHANGELOGLOCK
+
+keycloak:
+  auth-server-url: http://84.252.142.208:8080/auth
+  realm: balance-tracker
+  resource: balance-tracker-common
+  public-client: true
+  ssl-required: external
+  use-resource-role-mappings: true
+  bearer-only: true
+  credentials:
+    secret: 8ccc9d29-726a-40fc-baa9-6b87f9bbfbaf
+

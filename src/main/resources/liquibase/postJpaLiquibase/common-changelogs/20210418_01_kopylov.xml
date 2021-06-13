@@ -1,0 +1,22 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20210418_01_kopylov" author="kopylov">
+        <insert schemaName="public" tableName="transaction_account_type">
+            <column name="account_type" value="PURSE"/>
+        </insert>
+        <insert schemaName="public" tableName="transaction_account_type">
+            <column name="account_type" value="OUTCOME"/>
+        </insert>
+        <insert schemaName="public" tableName="transaction_account_type">
+            <column name="account_type" value="INCOME"/>
+        </insert>
+        <insert schemaName="public" tableName="transaction_account_type">
+            <column name="account_type" value="INITIALIZER"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
+
