@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.balancetracker.model.dto.TransactionDTO;
 import ru.balancetracker.model.jpa.Transaction;
 import ru.balancetracker.security.SecurityConstants;
+import ru.balancetracker.security.utils.SecurityUtils;
 import ru.balancetracker.service.TransactionService;
 
 import java.time.LocalDateTime;
@@ -23,11 +24,11 @@ public class TransactionController {
     }
 
     @SecurityConstants.PreAuthorizeUserRole
-    @GetMapping("/transactions-for-user/{userId}/{itemsPerPage}/{pageNumber}")
-    public List<Transaction> getTransactionsForUser(@PathVariable String userId,
-                                                    @PathVariable Integer itemsPerPage,
+    @GetMapping("/transactions-for-user/{itemsPerPage}/{pageNumber}")
+    public List<Transaction> getTransactionsForUser(@PathVariable Integer itemsPerPage,
                                                     @PathVariable Integer pageNumber,
                                                     @RequestBody LocalDateTime transactionDate){
+        String userId = SecurityUtils.getCurrentUser().getId();
         return service.getTransactionsPerPage(itemsPerPage, pageNumber, userId, transactionDate);
     }
 

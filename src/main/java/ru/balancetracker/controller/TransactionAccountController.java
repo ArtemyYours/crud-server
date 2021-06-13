@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.balancetracker.model.dto.TransactionAccountDTO;
 import ru.balancetracker.model.jpa.TransactionAccount;
 import ru.balancetracker.security.SecurityConstants;
+import ru.balancetracker.security.utils.SecurityUtils;
 import ru.balancetracker.service.TransactionAccountService;
 
 import java.util.List;
@@ -34,31 +35,34 @@ public class TransactionAccountController {
     }
 
     @SecurityConstants.PreAuthorizeUserRole
-    @GetMapping("/{userId}/purses")
-    public List<TransactionAccount> getPursesForUser(@PathVariable String userId){
+    @GetMapping("/purses/all")
+    public List<TransactionAccount> getPursesForUser(){
+        String userId = SecurityUtils.getCurrentUser().getId();
         return service.getPursesForUser(userId);
     }
 
     @SecurityConstants.PreAuthorizeUserRole
-    @GetMapping("/{userId}/outcome")
-    public List<TransactionAccount> getOutcomesForUser(@PathVariable String userId){
+    @GetMapping("/outcome/all")
+    public List<TransactionAccount> getOutcomesForUser(){
+        String userId = SecurityUtils.getCurrentUser().getId();
         return service.getOutcomeForUser(userId);
     }
 
     @SecurityConstants.PreAuthorizeUserRole
-    @GetMapping("/{userId}/income")
-    public List<TransactionAccount> getIncomesForUser(@PathVariable String userId){
+    @GetMapping("/income/all")
+    public List<TransactionAccount> getIncomesForUser(){
+        String userId = SecurityUtils.getCurrentUser().getId();
         return service.getIncomeForUser(userId);
     }
 
     @SecurityConstants.PreAuthorizeUserRole
-    @DeleteMapping("/{id}/delete")
+    @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable Long id){
         service.deleteTransactionAccount(id);
     }
 
     @SecurityConstants.PreAuthorizeUserRole
-    @PutMapping("/{transactionAccountId}/update")
+    @PutMapping("/update/{transactionAccountId}")
     public void update(@PathVariable Long transactionAccountId,
                        @RequestBody TransactionAccountDTO transactionDTO){
         service.update(transactionAccountId, transactionDTO);

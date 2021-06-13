@@ -10,6 +10,7 @@ import ru.balancetracker.repository.IconRepository;
 import ru.balancetracker.repository.TransactionAccountRepository;
 import ru.balancetracker.repository.TransactionAccountTypeRepository;
 import ru.balancetracker.repository.TransactionRepository;
+import ru.balancetracker.security.utils.SecurityUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -52,15 +53,24 @@ public class TransactionAccountService {
 
     public void deleteTransactionAccount(Long id){
         TransactionAccount transactionAccount = repository.findById(id).get();
-        transactionAccount.setDeleted(true);
-        repository.save(transactionAccount);
+        if(checkUserRightsToTransactionAccount(transactionAccount)) {
+            transactionAccount.setDeleted(true);
+            repository.save(transactionAccount);
+        }
+        //TODO: implements common exception class to pass to front
+        throw new IllegalArgumentException();
     }
 
     public void update(Long id, TransactionAccountDTO transactionAccountDTO){
         TransactionAccount transactionAccountToUpdate = repository.findById(id).get();
-        changeFieldsIfChanged(transactionAccountDTO, transactionAccountToUpdate);
-        repository.save(transactionAccountToUpdate);
 
+        if(checkUserRightsToTransactionAccount(transactionAccountToUpdate)) {
+            changeFieldsIfChanged(transactionAccountDTO, transactionAccountToUpdate);
+            repository.save(transactionAccountToUpdate);
+        }
+
+        //TODO: implements common exception class to pass to front
+        throw new IllegalArgumentException();
     }
 
     private TransactionAccount createTransactionAccount(TransactionAccountDTO transactionAccountDTO, AccountType type){
@@ -70,7 +80,7 @@ public class TransactionAccountService {
                 transactionAccountTypeRepository.findByAccountTupe(type.toString()));
         transactionAccountToSave.setComment(transactionAccountDTO.getComment());
         transactionAccountToSave.setIcon(iconRepository.findById(transactionAccountDTO.getIcon()).get());
-        transactionAccountToSave.setUserId(transactionAccountDTO.getUserId());
+        transactionAccountToSave.setUserId(SecurityUtils.getCurrentUser().getId());
         transactionAccountToSave.setName(transactionAccountDTO.getName());
         TransactionAccount savedAccount = repository.saveAndFlush(transactionAccountToSave);
 
@@ -88,22 +98,28 @@ public class TransactionAccountService {
         initialisingTransaction.setSource(repository.getInitializingIncome());
         initialisingTransaction.setDisplayed(false);
         initialisingTransaction.setTransactionDate(LocalDateTime.now());
-        initialisingTransaction.setUserId(savedTransactionAccount.getUserId());
+        initialisingTransaction.setUserId(SecurityUtils.getCurrentUser().getId());
 
         transactionRepository.save(initialisingTransaction);
     }
 
     private void changeFieldsIfChanged(TransactionAccountDTO transactionAccountDTO,
                                        TransactionAccount transactionAccount){
-        if(!transactionAccount.getComment().equals(transactionAccountDTO.getComment())){
+        if(!transactionAccount.getComment().equals(transactionAccountDTO.getComment()) && transactionAccount.getComment() != null){
             transactionAccount.setComment(transactionAccountDTO.getComment());
         }
-        if(!transactionAccount.getName().equals(transactionAccountDTO.getName())){
+        if(!transactionAccount.getName().equals(transactionAccountDTO.getName()) && transactionAccount.getName() != null){
             transactionAccount.setName(transactionAccountDTO.getName());
         }
-        if(!transactionAccount.getIcon().getId().equals(transactionAccountDTO.getIcon())){
+        if(!transactionAccount.getIcon().getId().equals(transactionAccountDTO.getIcon()) && transactionAccount.getIcon() != null){
             transactionAccount.setIcon(iconRepository.findById(transactionAccountDTO.getIcon()).get());
         }
+
+    }
+
+    private boolean checkUserRightsToTransactionAccount(TransactionAccount transactionAccount){
+        String userId = SecurityUtils.getCurrentUser().getId();
+        return transactionAccount.getUserId().equals(userId);
 
     }
 
