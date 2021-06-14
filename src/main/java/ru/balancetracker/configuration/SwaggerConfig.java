@@ -87,7 +87,7 @@ public class SwaggerConfig {
         String keycloakUrl = properties.getAuthServerUrl();
         String defaultRealm = properties.getRealm();
         LoginEndpoint login = new LoginEndpointBuilder()
-                .url(keycloakUrl + "realms/" + defaultRealm + "/protocol/openid-connect/auth")
+                .url(keycloakUrl + "/realms/" + defaultRealm + "/protocol/openid-connect/auth")
                 .build();
 
         List<GrantType> gTypes = new ArrayList<>();
