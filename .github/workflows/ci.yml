@@ -70,6 +70,7 @@ jobs:
             docker image rm ${{ env.DOCKER_IMAGE_NAME }} &
             exit
 
+
   deploy-and-run:
     runs-on: ubuntu-latest
     timeout-minutes: 2
