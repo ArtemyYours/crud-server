@@ -36,7 +36,7 @@ keycloak:
   realm: balance-tracker
   resource: balance-tracker-common
   public-client: true
-  ssl-required: external
+  ssl-required: NONE
   use-resource-role-mappings: true
   bearer-only: true
   credentials:
