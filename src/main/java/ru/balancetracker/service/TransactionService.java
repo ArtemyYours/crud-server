@@ -1,6 +1,9 @@
 package ru.balancetracker.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.balancetracker.model.dto.TransactionDTO;
 import ru.balancetracker.model.jpa.PeriodicTransaction;
@@ -11,7 +14,6 @@ import ru.balancetracker.repository.TransactionAccountRepository;
 import ru.balancetracker.repository.TransactionRepository;
 import ru.balancetracker.security.utils.SecurityUtils;
 
-import java.rmi.AccessException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -44,8 +46,9 @@ public class TransactionService {
         Integer offset = (pageNumber - 1) * itemsPerPage;
         Integer limit = itemsPerPage;
 
-        List<Transaction> transactions = repository.findTransactionsForPage(userId, transactionDate, offset, limit);
+        Pageable pageable = PageRequest.of(pageNumber, itemsPerPage, Sort.by("transaction_date"));
 
+        List<Transaction> transactions = repository.findTransactionsForUser(userId, transactionDate, pageable);
         return transactions;
 
     }
@@ -75,9 +78,10 @@ public class TransactionService {
         if(checkIfUserHasRightsToTransaction(transactionToDelete)){
             transactionToDelete.setDeleted(true);
             repository.save(transactionToDelete);
+        } else {
+            //TODO: implements common exception class to pass to front
+            throw new IllegalArgumentException();
         }
-        //TODO: implements common exception class to pass to front
-        throw new IllegalArgumentException();
     }
 
     public Long createPeriodicTransactionAndSave(TransactionDTO transactionDTO, Long timePeriod) {
@@ -116,22 +120,22 @@ public class TransactionService {
 
     private Transaction updateFieldsIfChanged(Transaction transactionWithUpdateData, Transaction transactionToUpdate){
 
-        if(!transactionToUpdate.getSource().equals(transactionWithUpdateData.getSource()) && transactionToUpdate.getSource() != null ){
+        if(transactionToUpdate.getSource() != null && !transactionToUpdate.getSource().equals(transactionWithUpdateData.getSource())){
             transactionToUpdate.setSource(transactionWithUpdateData.getSource());
         }
-        if(!transactionToUpdate.getDestination().equals(transactionWithUpdateData.getDestination()) && transactionToUpdate.getDestination() != null){
+        if(transactionToUpdate.getDestination() != null && !transactionToUpdate.getDestination().equals(transactionWithUpdateData.getDestination())){
             transactionToUpdate.setDestination(transactionWithUpdateData.getDestination());
         }
-        if(!transactionToUpdate.getAmount().equals(transactionWithUpdateData.getAmount()) && transactionToUpdate.getAmount() != null ){
+        if(transactionToUpdate.getAmount() != null && !transactionToUpdate.getAmount().equals(transactionWithUpdateData.getAmount())){
             transactionToUpdate.setAmount(transactionWithUpdateData.getAmount());
         }
-        if(!transactionToUpdate.getAmount().equals(transactionWithUpdateData.getAmount()) && transactionToUpdate.getAmount() != null ){
+        if(transactionToUpdate.getAmount() != null && !transactionToUpdate.getAmount().equals(transactionWithUpdateData.getAmount())){
             transactionToUpdate.setAmount(transactionWithUpdateData.getAmount());
         }
-        if(!transactionToUpdate.getTransactionDate().equals(transactionWithUpdateData.getTransactionDate()) && transactionToUpdate.getTransactionDate() != null ){
+        if(transactionToUpdate.getTransactionDate() != null && !transactionToUpdate.getTransactionDate().equals(transactionWithUpdateData.getTransactionDate())){
             transactionToUpdate.setTransactionDate(transactionWithUpdateData.getTransactionDate());
         }
-        if(!transactionToUpdate.getComment().equals(transactionWithUpdateData.getComment()) && transactionToUpdate.getComment() != null ){
+        if(transactionToUpdate.getComment() != null && !transactionToUpdate.getComment().equals(transactionWithUpdateData.getComment())){
             transactionToUpdate.setComment(transactionWithUpdateData.getComment());
         }
         return transactionToUpdate;

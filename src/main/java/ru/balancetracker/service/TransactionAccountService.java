@@ -56,10 +56,11 @@ public class TransactionAccountService {
         if(checkUserRightsToTransactionAccount(transactionAccount)) {
             transactionAccount.setDeleted(true);
             repository.save(transactionAccount);
+        }else {
+            //TODO: implements common exception class to pass to front
+            throw new IllegalArgumentException();
         }
-        //TODO: implements common exception class to pass to front
-        throw new IllegalArgumentException();
-    }
+        }
 
     public void update(Long id, TransactionAccountDTO transactionAccountDTO){
         TransactionAccount transactionAccountToUpdate = repository.findById(id).get();
@@ -67,10 +68,11 @@ public class TransactionAccountService {
         if(checkUserRightsToTransactionAccount(transactionAccountToUpdate)) {
             changeFieldsIfChanged(transactionAccountDTO, transactionAccountToUpdate);
             repository.save(transactionAccountToUpdate);
-        }
+        } else {
 
-        //TODO: implements common exception class to pass to front
-        throw new IllegalArgumentException();
+            //TODO: implements common exception class to pass to front
+            throw new IllegalArgumentException();
+        }
     }
 
     private TransactionAccount createTransactionAccount(TransactionAccountDTO transactionAccountDTO, AccountType type){
@@ -105,13 +107,13 @@ public class TransactionAccountService {
 
     private void changeFieldsIfChanged(TransactionAccountDTO transactionAccountDTO,
                                        TransactionAccount transactionAccount){
-        if(!transactionAccount.getComment().equals(transactionAccountDTO.getComment()) && transactionAccount.getComment() != null){
+        if(transactionAccountDTO.getComment() != null && !transactionAccount.getComment().equals(transactionAccountDTO.getComment())){
             transactionAccount.setComment(transactionAccountDTO.getComment());
         }
-        if(!transactionAccount.getName().equals(transactionAccountDTO.getName()) && transactionAccount.getName() != null){
+        if(transactionAccountDTO.getName() != null && !transactionAccount.getName().equals(transactionAccountDTO.getName())){
             transactionAccount.setName(transactionAccountDTO.getName());
         }
-        if(!transactionAccount.getIcon().getId().equals(transactionAccountDTO.getIcon()) && transactionAccount.getIcon() != null){
+        if(transactionAccountDTO.getIcon() != null && !transactionAccount.getIcon().getId().equals(transactionAccountDTO.getIcon())){
             transactionAccount.setIcon(iconRepository.findById(transactionAccountDTO.getIcon()).get());
         }
 

@@ -37,8 +37,8 @@ public interface TransactionAccountRepository extends JpaRepository<TransactionA
             "ORDER BY ta.name")
     List<TransactionAccount> findIncomeForUser(String userId);
 
-    @Query(value = "SELECT * FROM public.transaction_account ta " +
-            "WHERE ta.transaction_account_type_id = 4;", nativeQuery = true)
+    @Query(value = "SELECT ta FROM TransactionAccount ta " +
+            "WHERE ta.transactionAccountType = (SELECT tat FROM TransactionAccountType tat WHERE tat.accountType = 'INITIALIZER')")
     TransactionAccount getInitializingIncome();
 
     @Query(value = "SELECT 9999.00", nativeQuery = true)

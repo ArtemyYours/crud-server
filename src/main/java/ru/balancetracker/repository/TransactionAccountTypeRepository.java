@@ -9,7 +9,7 @@ import ru.balancetracker.model.jpa.TransactionAccountType;
 @Repository
 public interface TransactionAccountTypeRepository extends JpaRepository<TransactionAccountType, Long> {
 
-    @Query(nativeQuery = true, value = "SELECT * FROM public.transaction_account_type tat WHERE tat.account_type = :type ")
+    @Query(value = "SELECT tat FROM TransactionAccountType tat WHERE tat.accountType = :type ")
     TransactionAccountType findByAccountTupe(@Param("type") String type);
 
 }

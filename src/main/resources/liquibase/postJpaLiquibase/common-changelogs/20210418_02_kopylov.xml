@@ -6,10 +6,10 @@
     <changeSet id="20210418_01_kopylov" author="kopylov">
         <insert schemaName="public" tableName="transaction_account">
             <column name="comment" value="this purse is used to initialize deposit"/>
-            <column name="deposit" value="0"/>
             <column name="is_deleted" value="false"/>
-            <column name="PURSE_INITIALIZER" value="false"/>
-            <column name="system" value="false"/>
+            <column name="name" value="purse_initialiszr"/>
+            <column name="user_id" value="system"/>
+            <column name="icon_id" value="1"/>
             <column name="transaction_account_type_id" value="4"/>
         </insert>
 

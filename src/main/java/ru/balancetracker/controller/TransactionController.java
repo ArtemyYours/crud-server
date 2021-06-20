@@ -24,7 +24,7 @@ public class TransactionController {
     }
 
     @SecurityConstants.PreAuthorizeUserRole
-    @GetMapping("/transactions-for-user/{itemsPerPage}/{pageNumber}")
+    @PutMapping("/transactions-for-user/{itemsPerPage}/{pageNumber}")
     public List<Transaction> getTransactionsForUser(@PathVariable Integer itemsPerPage,
                                                     @PathVariable Integer pageNumber,
                                                     @RequestBody LocalDateTime transactionDate){
