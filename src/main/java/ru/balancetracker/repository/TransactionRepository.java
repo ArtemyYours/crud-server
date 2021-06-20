@@ -18,22 +18,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             "WHERE t.userId = :userId " +
             "AND t.transactionDate <= :transactionDate " +
             "AND t.isDeleted = false " +
-            "AND t.isDisplayed = true " +
-            "ORDER BY t.transactionDate DESC " +
-            "OFFSET :offset " +
-            "LIMIT :limit "
-            )
-    List<Transaction> findTransactionsForPage(@Param("userId") String userId,
-                                              @Param("transactionDate")LocalDateTime transactionDate,
-                                              @Param("offset") Integer offset,
-                                              @Param("limit") Integer limit);
-
-
-    @Query(value = "SELECT t " +
-            "FROM Transaction t " +
-            "WHERE t.userId = :userId " +
-            "AND t.transactionDate <= :transactionDate " +
-            "AND t.isDeleted = false " +
             "AND t.isDisplayed = true "
     )
     List<Transaction> findTransactionsForUser(@Param("userId") String userId,
