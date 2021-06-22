@@ -5,7 +5,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.balancetracker.exceptions.MessageCode;
 import ru.balancetracker.model.dto.TransactionDTO;
+import ru.balancetracker.model.exception.BTRestException;
 import ru.balancetracker.model.jpa.PeriodicTransaction;
 import ru.balancetracker.model.jpa.Transaction;
 import ru.balancetracker.model.jpa.TransactionAccount;
@@ -16,6 +18,7 @@ import ru.balancetracker.security.utils.SecurityUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -65,8 +68,9 @@ public class TransactionService {
             updateFieldsIfChanged(transactionWithUpdateData, transactionToUpdate);
             repository.save(transactionToUpdate);
         } else {
-            //TODO: implements common exception class to pass to front
-            throw new IllegalArgumentException();
+            throw new BTRestException(MessageCode.USER_DOESNT_HAVE_ACCESS_TO_TRANSACTION,
+                    "Current user can't modify this transaction",
+                    null);
         }
     }
 
@@ -81,8 +85,9 @@ public class TransactionService {
             transactionToDelete.setDeleted(true);
             repository.save(transactionToDelete);
         } else {
-            //TODO: implements common exception class to pass to front
-            throw new IllegalArgumentException();
+            throw new BTRestException(MessageCode.USER_DOESNT_HAVE_ACCESS_TO_TRANSACTION,
+                    "Current user can't delete this transaction",
+                    null);
         }
     }
 

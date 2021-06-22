@@ -2,7 +2,9 @@ package ru.balancetracker.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.balancetracker.exceptions.MessageCode;
 import ru.balancetracker.model.dto.TransactionAccountDTO;
+import ru.balancetracker.model.exception.BTRestException;
 import ru.balancetracker.model.jpa.AccountType;
 import ru.balancetracker.model.jpa.Transaction;
 import ru.balancetracker.model.jpa.TransactionAccount;
@@ -57,8 +59,9 @@ public class TransactionAccountService {
             transactionAccount.setDeleted(true);
             repository.save(transactionAccount);
         }else {
-            //TODO: implements common exception class to pass to front
-            throw new IllegalArgumentException();
+            throw new BTRestException(MessageCode.USER_DOESNT_HAVE_ACCESS_TO_TRANSACTION_ACCOUNT,
+                    "Current user can't delete this transaction account",
+                    null);
         }
         }
 
@@ -69,9 +72,9 @@ public class TransactionAccountService {
             changeFieldsIfChanged(transactionAccountDTO, transactionAccountToUpdate);
             repository.save(transactionAccountToUpdate);
         } else {
-
-            //TODO: implements common exception class to pass to front
-            throw new IllegalArgumentException();
+            throw new BTRestException(MessageCode.USER_DOESNT_HAVE_ACCESS_TO_TRANSACTION_ACCOUNT,
+                    "Current user can't delete this transaction account",
+                    null);
         }
     }
 
