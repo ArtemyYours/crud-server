@@ -82,7 +82,7 @@ public class TransactionAccountService {
         TransactionAccount transactionAccountToSave = new TransactionAccount();
 
         transactionAccountToSave.setTransactionAccountType(
-                transactionAccountTypeRepository.findByAccountTupe(type.toString()));
+                transactionAccountTypeRepository.findByAccountType(type));
         transactionAccountToSave.setComment(transactionAccountDTO.getComment());
         transactionAccountToSave.setIcon(iconRepository.findById(transactionAccountDTO.getIcon()).get());
         transactionAccountToSave.setUserId(SecurityUtils.getCurrentUser().getId());
