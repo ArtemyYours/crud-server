@@ -5,7 +5,7 @@ spring:
   main:
     allow-bean-definition-overriding: true
   datasource:
-    url: jdbc:postgresql://130.193.41.11:5000/postgres
+    url: jdbc:postgresql://130.193.41.43:5000/postgres
     username: user
     password: 123123
   jpa:
@@ -32,7 +32,7 @@ balance-tracker:
     database-change-log-lock-table: POST_JPA_DATABASECHANGELOGLOCK
 
 keycloak:
-  auth-server-url: http://130.193.41.11:8080/auth
+  auth-server-url: http://130.193.41.43:8080/auth
   realm: balance-tracker
   resource: balance-tracker-common
   public-client: true

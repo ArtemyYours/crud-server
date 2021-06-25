@@ -25,8 +25,8 @@ import java.util.Map;
 public class TransactionService {
     private final TransactionRepository repository;
     private final PeriodicTransactionRepository periodicTransactionRepository;
-
     private final TransactionAccountRepository transactionAccountRepository;
+    private final TransactionAccountService transactionAccountService;
 
     public Long createTransactionAndSave(TransactionDTO transactionDTO) {
         Transaction savedTransaction = convertAndSave(transactionDTO);
@@ -64,8 +64,7 @@ public class TransactionService {
     public void updateTransaction(TransactionDTO transactionDTO, Long id) {
         Transaction transactionToUpdate = repository.findById(id).get();
         if (checkIfUserHasRightsToTransaction(transactionToUpdate)) {
-            Transaction transactionWithUpdateData = convertDtoToTransaction(transactionDTO);
-            updateFieldsIfChanged(transactionWithUpdateData, transactionToUpdate);
+            updateFieldsIfChanged(transactionDTO, transactionToUpdate);
             repository.save(transactionToUpdate);
         } else {
             throw new BTRestException(MessageCode.USER_DOESNT_HAVE_ACCESS_TO_TRANSACTION,
@@ -127,24 +126,30 @@ public class TransactionService {
         return transaction;
     }
 
-    private Transaction updateFieldsIfChanged(Transaction transactionWithUpdateData, Transaction transactionToUpdate) {
+    private Transaction updateFieldsIfChanged(TransactionDTO transactionWithUpdateData, Transaction transactionToUpdate) {
 
-        if (transactionToUpdate.getSource() != null && !transactionToUpdate.getSource().equals(transactionWithUpdateData.getSource())) {
-            transactionToUpdate.setSource(transactionWithUpdateData.getSource());
+        if (transactionWithUpdateData.getSourceId() != null) {
+            Long newSourceId = transactionWithUpdateData.getSourceId();
+            TransactionAccount newSource = transactionAccountRepository.findById(newSourceId).get();
+            transactionAccountService.checkThatTransactionAccountValidity(newSource);
+            transactionToUpdate.setSource(newSource);
         }
-        if (transactionToUpdate.getDestination() != null && !transactionToUpdate.getDestination().equals(transactionWithUpdateData.getDestination())) {
-            transactionToUpdate.setDestination(transactionWithUpdateData.getDestination());
+        if (transactionWithUpdateData.getDestinationId() != null) {
+            Long newDestinationId = transactionWithUpdateData.getSourceId();
+            TransactionAccount newDestination = transactionAccountRepository.findById(newDestinationId).get();
+            transactionAccountService.checkThatTransactionAccountValidity(newDestination);
+            transactionToUpdate.setDestination(newDestination);
         }
-        if (transactionToUpdate.getAmount() != null && !transactionToUpdate.getAmount().equals(transactionWithUpdateData.getAmount())) {
+        if (transactionWithUpdateData.getAmount() != null) {
             transactionToUpdate.setAmount(transactionWithUpdateData.getAmount());
         }
-        if (transactionToUpdate.getAmount() != null && !transactionToUpdate.getAmount().equals(transactionWithUpdateData.getAmount())) {
+        if (transactionWithUpdateData.getAmount() != null) {
             transactionToUpdate.setAmount(transactionWithUpdateData.getAmount());
         }
-        if (transactionToUpdate.getTransactionDate() != null && !transactionToUpdate.getTransactionDate().equals(transactionWithUpdateData.getTransactionDate())) {
+        if (transactionWithUpdateData.getTransactionDate() != null) {
             transactionToUpdate.setTransactionDate(transactionWithUpdateData.getTransactionDate());
         }
-        if (transactionToUpdate.getComment() != null && !transactionToUpdate.getComment().equals(transactionWithUpdateData.getComment())) {
+        if (transactionWithUpdateData.getComment() != null) {
             transactionToUpdate.setComment(transactionWithUpdateData.getComment());
         }
         return transactionToUpdate;
