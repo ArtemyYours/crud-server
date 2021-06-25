@@ -1,6 +1,7 @@
 package ru.balancetracker.service;
 
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.springframework.stereotype.Service;
 import ru.balancetracker.exceptions.MessageCode;
 import ru.balancetracker.model.dto.TransactionAccountDTO;
@@ -125,7 +126,14 @@ public class TransactionAccountService {
     private boolean checkUserRightsToTransactionAccount(TransactionAccount transactionAccount){
         String userId = SecurityUtils.getCurrentUser().getId();
         return transactionAccount.getUserId().equals(userId);
+    }
 
+    public void checkThatTransactionAccountValidity(@NonNull TransactionAccount transactionAccount){
+        if(transactionAccount.isDeleted()){
+            throw new BTRestException(MessageCode.THIS_TRANSACTION_ACCOUNT_DOES_NOT_EXIST,
+                    "Transaction account which intended to be used marked as deleted",
+                    null);
+        }
     }
 
 
