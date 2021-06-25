@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.balancetracker.exceptions.MessageCode;
+import ru.balancetracker.model.exception.BTRestException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -44,4 +46,24 @@ public class Transaction {
 
     @Column(name = "is_displayed", columnDefinition = "boolean default false")
     private boolean isDisplayed;
+
+
+
+    public void setSource(TransactionAccount source){
+        if(source.getTransactionAccountType().getAccountType() == AccountType.OUTCOME){
+            throw new BTRestException(MessageCode.OUTCOME_CANNOT_BE_SOURCE,
+                    "Transaction account with type outcome cannot be used as a source in transaction",
+                    null);
+        }
+    }
+    public void setDestination(TransactionAccount destination){
+        if(source.getTransactionAccountType().getAccountType() == AccountType.INCOME
+        || source.getTransactionAccountType().getAccountType() == AccountType.INITIALIZER){
+            throw new BTRestException(MessageCode.INCOME_CANNOT_BE_DESTINATION,
+                    "Transaction account with type income or initializer cannot be used as a source in destination",
+                    null);
+        }
+    }
+
+
 }
