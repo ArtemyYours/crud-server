@@ -55,6 +55,7 @@ public class Transaction {
                     "Transaction account with type outcome cannot be used as a source in transaction",
                     null);
         }
+        this.source = source;
     }
     public void setDestination(TransactionAccount destination){
         if(source.getTransactionAccountType().getAccountType() == AccountType.INCOME
@@ -63,6 +64,7 @@ public class Transaction {
                     "Transaction account with type income or initializer cannot be used as a source in destination",
                     null);
         }
+        this.destination = destination;
     }
 
 
