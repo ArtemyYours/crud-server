@@ -100,8 +100,8 @@ public class TransactionAccountService {
         Transaction initialisingTransaction = new Transaction();
 
         initialisingTransaction.setAmount(value);
-        initialisingTransaction.setDestination(savedTransactionAccount);
         initialisingTransaction.setSource(repository.getInitializingIncome());
+        initialisingTransaction.setDestination(savedTransactionAccount);
         initialisingTransaction.setDisplayed(false);
         initialisingTransaction.setTransactionDate(LocalDateTime.now());
         initialisingTransaction.setUserId(SecurityUtils.getCurrentUser().getId());
