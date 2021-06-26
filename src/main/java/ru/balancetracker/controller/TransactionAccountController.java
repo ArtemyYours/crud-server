@@ -18,19 +18,19 @@ public class TransactionAccountController {
 
     @SecurityConstants.PreAuthorizeUserRole
     @PostMapping("/create-purse")
-    public Long createPurse(TransactionAccountDTO transactionAccountDTO){
+    public Long createPurse(@RequestBody TransactionAccountDTO transactionAccountDTO){
         return service.createPurse(transactionAccountDTO);
     }
 
     @SecurityConstants.PreAuthorizeUserRole
     @PostMapping("/create-outcome")
-    public Long createOutcome(TransactionAccountDTO transactionAccountDTO){
+    public Long createOutcome(@RequestBody TransactionAccountDTO transactionAccountDTO){
         return service.createOutcome(transactionAccountDTO);
     }
 
     @SecurityConstants.PreAuthorizeUserRole
     @PostMapping("/create-income")
-    public Long createIncome(TransactionAccountDTO transactionAccountDTO){
+    public Long createIncome(@RequestBody TransactionAccountDTO transactionAccountDTO){
         return service.createIncome(transactionAccountDTO);
     }
 
