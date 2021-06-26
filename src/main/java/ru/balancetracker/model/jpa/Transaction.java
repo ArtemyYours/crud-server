@@ -58,10 +58,9 @@ public class Transaction {
         this.source = source;
     }
     public void setDestination(TransactionAccount destination){
-        if(destination.getTransactionAccountType().getAccountType() == AccountType.INCOME
-        || destination.getTransactionAccountType().getAccountType() == AccountType.INITIALIZER){
+        if(destination.getTransactionAccountType().getAccountType() == AccountType.INCOME){
             throw new BTRestException(MessageCode.INCOME_CANNOT_BE_DESTINATION,
-                    "Transaction account with type income or initializer cannot be used as a source in destination",
+                    "Transaction account with type income cannot be used as a source in destination",
                     null);
         }
         this.destination = destination;
