@@ -80,8 +80,5 @@ jobs:
         with:
           privateKey: ${{ secrets.SERVER_SECRET }}
           hosts: ubuntu@${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          port: 22
-          connect_timeout: 20s
           command: 
             nohup docker run -p ${{ env.PORT_TO_MAP }} ${{ env.DOCKER_IMAGE_NAME }} >/dev/null 2>/dev/null &
