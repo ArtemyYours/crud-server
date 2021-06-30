@@ -41,7 +41,10 @@ public interface TransactionAccountRepository extends JpaRepository<TransactionA
             "WHERE ta.transactionAccountType = (SELECT tat FROM TransactionAccountType tat WHERE tat.accountType = 'INITIALIZER')")
     TransactionAccount getInitializingIncome();
 
-    @Query(value = "SELECT 9999.00", nativeQuery = true)
+    //TODO: find a way to do it with a jpql query
+    @Query(value = "SELECT tad.deposit " +
+            "FROM transaction_account_deposit tad " +
+            "WHERE tad.transaction_account_id = :transactionAccountId", nativeQuery = true)
     Double getDepositForAccount(Long transactionAccountId);
 
 }

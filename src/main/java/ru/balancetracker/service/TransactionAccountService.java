@@ -21,24 +21,26 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class TransactionAccountService {
-    private TransactionAccountRepository repository;
-    private TransactionAccountTypeRepository transactionAccountTypeRepository;
-    private IconRepository iconRepository;
-    private TransactionRepository transactionRepository;
+    private final TransactionAccountRepository repository;
+    private final TransactionAccountTypeRepository transactionAccountTypeRepository;
+    private final IconRepository iconRepository;
+    private final TransactionRepository transactionRepository;
 
-    public List<TransactionAccount> getPursesForUser(String userId){
+    public List<TransactionAccount> getPursesForUser(String userId) {
         List<TransactionAccount> userAccounts = repository.findPursesForUser(userId);
         userAccounts.forEach(account -> account.setDeposit(repository.getDepositForAccount(account.getId())));
         return userAccounts;
     }
 
-    public List<TransactionAccount> getOutcomeForUser(String userId){
+    public List<TransactionAccount> getOutcomeForUser(String userId) {
         List<TransactionAccount> userAccounts = repository.findOutcomeForUser(userId);
+        userAccounts.forEach(account -> account.setDeposit(repository.getDepositForAccount(account.getId())));
         return userAccounts;
     }
 
     public List<TransactionAccount> getIncomeForUser(String userId){
         List<TransactionAccount> userAccounts = repository.findIncomeForUser(userId);
+        userAccounts.forEach(account -> account.setDeposit(repository.getDepositForAccount(account.getId())));
         return userAccounts;
     }
 
