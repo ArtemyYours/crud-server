@@ -9,7 +9,8 @@ import java.util.Map;
 @Getter
 @ToString
 public class UserErrorMessage {
+
     @NonNull
-    private String errorMessage;
+    private final String errorMessage;
     private Map<String, String> errorParameters;
 }

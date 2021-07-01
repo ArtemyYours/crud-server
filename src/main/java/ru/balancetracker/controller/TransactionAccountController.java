@@ -14,57 +14,57 @@ import java.util.List;
 @RequestMapping("/transaction-account")
 @AllArgsConstructor
 public class TransactionAccountController {
-    private TransactionAccountService service;
+    private final TransactionAccountService service;
 
     @SecurityConstants.PreAuthorizeUserRole
     @PostMapping("/create-purse")
-    public Long createPurse(@RequestBody TransactionAccountDTO transactionAccountDTO){
+    public Long createPurse(@RequestBody TransactionAccountDTO transactionAccountDTO) {
         return service.createPurse(transactionAccountDTO);
     }
 
     @SecurityConstants.PreAuthorizeUserRole
     @PostMapping("/create-outcome")
-    public Long createOutcome(@RequestBody TransactionAccountDTO transactionAccountDTO){
+    public Long createOutcome(@RequestBody TransactionAccountDTO transactionAccountDTO) {
         return service.createOutcome(transactionAccountDTO);
     }
 
     @SecurityConstants.PreAuthorizeUserRole
     @PostMapping("/create-income")
-    public Long createIncome(@RequestBody TransactionAccountDTO transactionAccountDTO){
+    public Long createIncome(@RequestBody TransactionAccountDTO transactionAccountDTO) {
         return service.createIncome(transactionAccountDTO);
     }
 
     @SecurityConstants.PreAuthorizeUserRole
     @GetMapping("/purses/all")
-    public List<TransactionAccount> getPursesForUser(){
+    public List<TransactionAccount> getPursesForUser() {
         String userId = SecurityUtils.getCurrentUser().getId();
         return service.getPursesForUser(userId);
     }
 
     @SecurityConstants.PreAuthorizeUserRole
     @GetMapping("/outcome/all")
-    public List<TransactionAccount> getOutcomesForUser(){
+    public List<TransactionAccount> getOutcomesForUser() {
         String userId = SecurityUtils.getCurrentUser().getId();
         return service.getOutcomeForUser(userId);
     }
 
     @SecurityConstants.PreAuthorizeUserRole
     @GetMapping("/income/all")
-    public List<TransactionAccount> getIncomesForUser(){
+    public List<TransactionAccount> getIncomesForUser() {
         String userId = SecurityUtils.getCurrentUser().getId();
         return service.getIncomeForUser(userId);
     }
 
     @SecurityConstants.PreAuthorizeUserRole
     @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable Long id){
+    public void delete(@PathVariable Long id) {
         service.deleteTransactionAccount(id);
     }
 
     @SecurityConstants.PreAuthorizeUserRole
     @PutMapping("/update/{transactionAccountId}")
     public void update(@PathVariable Long transactionAccountId,
-                       @RequestBody TransactionAccountDTO transactionDTO){
+                       @RequestBody TransactionAccountDTO transactionDTO) {
         service.update(transactionAccountId, transactionDTO);
     }
 

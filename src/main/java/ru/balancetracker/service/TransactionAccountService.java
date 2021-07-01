@@ -38,56 +38,59 @@ public class TransactionAccountService {
         return userAccounts;
     }
 
-    public List<TransactionAccount> getIncomeForUser(String userId){
+    public List<TransactionAccount> getIncomeForUser(String userId) {
         List<TransactionAccount> userAccounts = repository.findIncomeForUser(userId);
         userAccounts.forEach(account -> account.setDeposit(repository.getDepositForAccount(account.getId())));
         return userAccounts;
     }
 
-    public Long createPurse(TransactionAccountDTO transactionAccountDTO){
+    public Long createPurse(TransactionAccountDTO transactionAccountDTO) {
         return createTransactionAccount(transactionAccountDTO, AccountType.PURSE).getId();
     }
 
-    public Long createIncome(TransactionAccountDTO transactionAccountDTO){
+    public Long createIncome(TransactionAccountDTO transactionAccountDTO) {
         return createTransactionAccount(transactionAccountDTO, AccountType.INCOME).getId();
     }
 
-    public Long createOutcome(TransactionAccountDTO transactionAccountDTO){
+    public Long createOutcome(TransactionAccountDTO transactionAccountDTO) {
         return createTransactionAccount(transactionAccountDTO, AccountType.OUTCOME).getId();
     }
 
-    public void deleteTransactionAccount(Long id){
-        TransactionAccount transactionAccount = repository.findById(id).get();
+    public void deleteTransactionAccount(Long id) {
+        TransactionAccount transactionAccount = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("This transaction does not exist"));
         transactionAccount.setDeleted(true);
         repository.save(transactionAccount);
     }
 
     public void update(Long id, TransactionAccountDTO transactionAccountDTO) {
-        TransactionAccount transactionAccountToUpdate = repository.findById(id).get();
+        TransactionAccount transactionAccountToUpdate = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("This transaction account doe not exist"));
 
         changeFieldsIfChanged(transactionAccountDTO, transactionAccountToUpdate);
         repository.save(transactionAccountToUpdate);
 
     }
 
-    private TransactionAccount createTransactionAccount(TransactionAccountDTO transactionAccountDTO, AccountType type){
+    private TransactionAccount createTransactionAccount(TransactionAccountDTO transactionAccountDTO, AccountType type) {
         TransactionAccount transactionAccountToSave = new TransactionAccount();
 
         transactionAccountToSave.setTransactionAccountType(
                 transactionAccountTypeRepository.findByAccountType(type));
         transactionAccountToSave.setComment(transactionAccountDTO.getComment());
-        transactionAccountToSave.setIcon(iconRepository.findById(transactionAccountDTO.getIcon()).get());
+        transactionAccountToSave.setIcon(iconRepository.findById(transactionAccountDTO.getIcon())
+                .orElseThrow(() -> new IllegalArgumentException("This icon does not exist")));
         transactionAccountToSave.setUserId(SecurityUtils.getCurrentUser().getId());
         transactionAccountToSave.setName(transactionAccountDTO.getName());
         TransactionAccount savedAccount = repository.saveAndFlush(transactionAccountToSave);
 
-        if(transactionAccountDTO.getDeposit() > 0d){
+        if (transactionAccountDTO.getDeposit() > 0d) {
             depositInitialValueForPurse(savedAccount, transactionAccountDTO.getDeposit());
         }
         return savedAccount;
     }
 
-    private void depositInitialValueForPurse(TransactionAccount savedTransactionAccount, Double value){
+    private void depositInitialValueForPurse(TransactionAccount savedTransactionAccount, Double value) {
         Transaction initialisingTransaction = new Transaction();
 
         initialisingTransaction.setAmount(value);
@@ -101,21 +104,26 @@ public class TransactionAccountService {
     }
 
     private void changeFieldsIfChanged(TransactionAccountDTO transactionAccountDTO,
-                                       TransactionAccount transactionAccount){
-        if(transactionAccountDTO.getComment() != null && !transactionAccount.getComment().equals(transactionAccountDTO.getComment())){
+                                       TransactionAccount transactionAccount) {
+        String dtoComment = transactionAccountDTO.getComment();
+        String dtoName = transactionAccountDTO.getName();
+        Long dtoIconId = transactionAccountDTO.getIcon();
+
+        if (dtoComment != null) {
             transactionAccount.setComment(transactionAccountDTO.getComment());
         }
-        if(transactionAccountDTO.getName() != null && !transactionAccount.getName().equals(transactionAccountDTO.getName())){
+        if (dtoName != null) {
             transactionAccount.setName(transactionAccountDTO.getName());
         }
-        if(transactionAccountDTO.getIcon() != null && !transactionAccount.getIcon().getId().equals(transactionAccountDTO.getIcon())){
-            transactionAccount.setIcon(iconRepository.findById(transactionAccountDTO.getIcon()).get());
+        if (dtoIconId != null) {
+            transactionAccount.setIcon(iconRepository.findById(dtoIconId)
+                    .orElseThrow(() -> new IllegalArgumentException("This icon does not exist")));
         }
 
     }
 
-    public void checkThatTransactionAccountValidity(@NonNull TransactionAccount transactionAccount){
-        if(transactionAccount.isDeleted()){
+    public void checkThatTransactionAccountIsNotDelted(@NonNull TransactionAccount transactionAccount) {
+        if (transactionAccount.isDeleted()) {
             throw new BTRestException(MessageCode.THIS_TRANSACTION_ACCOUNT_DOES_NOT_EXIST,
                     "Transaction account which intended to be used marked as deleted",
                     null);

@@ -23,7 +23,7 @@ import java.util.*;
 @AllArgsConstructor
 public class SwaggerConfig {
 
-    private KeycloakProperties properties;
+    private final KeycloakProperties properties;
 
     @Bean
     public SecurityConfiguration securityConfiguration() {

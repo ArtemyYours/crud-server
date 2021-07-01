@@ -38,7 +38,6 @@ public class TransactionService {
      * @param pageNumber      which page is it, but starts from 0
      * @param userId          user, owner of transactions
      * @param transactionDate date, bellow which transactions are required
-     * @return
      */
     public List<Transaction> getTransactionsPerPage(Integer itemsPerPage,
                                                     Integer pageNumber,
@@ -47,8 +46,7 @@ public class TransactionService {
 
         Pageable pageable = PageRequest.of(pageNumber, itemsPerPage, Sort.by("transactionDate"));
 
-        List<Transaction> transactions = repository.findTransactionsForUser(userId, transactionDate, pageable);
-        return transactions;
+        return repository.findTransactionsForUser(userId, transactionDate, pageable);
 
     }
 
@@ -59,7 +57,9 @@ public class TransactionService {
      * @param id             identifier of transaction which will be changed
      */
     public void updateTransaction(TransactionDTO transactionDTO, Long id) {
-        Transaction transactionToUpdate = repository.findById(id).get();
+        Transaction transactionToUpdate = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("This transaction does not exist"));
+
         updateFieldsIfChanged(transactionDTO, transactionToUpdate);
         repository.save(transactionToUpdate);
 
@@ -71,7 +71,8 @@ public class TransactionService {
      * @param id identifier of transaction to delete
      */
     public void deleteTransaction(Long id) {
-        Transaction transactionToDelete = repository.findById(id).get();
+        Transaction transactionToDelete = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("This transaction does not exist"));
         transactionToDelete.setDeleted(true);
         repository.save(transactionToDelete);
     }
@@ -91,8 +92,11 @@ public class TransactionService {
     private Transaction convertDtoToTransaction(TransactionDTO transactionDTO) {
 
 
-        TransactionAccount source = transactionAccountRepository.findById(transactionDTO.getSourceId()).get();
-        TransactionAccount destination = transactionAccountRepository.findById(transactionDTO.getDestinationId()).get();
+        TransactionAccount source = transactionAccountRepository.findById(transactionDTO.getSourceId())
+                .orElseThrow(() -> new IllegalArgumentException("This transaction account does not exist"));
+
+        TransactionAccount destination = transactionAccountRepository.findById(transactionDTO.getDestinationId())
+                .orElseThrow(() -> new IllegalArgumentException("This transaction account does not exist"));
         Double amount = transactionDTO.getAmount();
         String userId = SecurityUtils.getCurrentUser().getId();
         String comment = transactionDTO.getComment();
@@ -112,33 +116,36 @@ public class TransactionService {
         return transaction;
     }
 
-    private Transaction updateFieldsIfChanged(TransactionDTO transactionWithUpdateData, Transaction transactionToUpdate) {
+    private void updateFieldsIfChanged(TransactionDTO transactionWithUpdateData, Transaction transactionToUpdate) {
 
-        if (transactionWithUpdateData.getSourceId() != null) {
-            Long newSourceId = transactionWithUpdateData.getSourceId();
-            TransactionAccount newSource = transactionAccountRepository.findById(newSourceId).get();
-            transactionAccountService.checkThatTransactionAccountValidity(newSource);
+        Long dtoSourceId = transactionWithUpdateData.getSourceId();
+        Long dtoDestinationId = transactionWithUpdateData.getDestinationId();
+        Double dtoAmount = transactionWithUpdateData.getAmount();
+        LocalDateTime dtoTransactionDate = transactionWithUpdateData.getTransactionDate();
+        String dtoComment = transactionWithUpdateData.getComment();
+
+        if (dtoSourceId != null) {
+            TransactionAccount newSource = transactionAccountRepository.findById(dtoSourceId)
+                    .orElseThrow(() -> new IllegalArgumentException("This transaction account does not exist"));
+            transactionAccountService.checkThatTransactionAccountIsNotDelted(newSource);
             transactionToUpdate.setSource(newSource);
         }
-        if (transactionWithUpdateData.getDestinationId() != null) {
-            Long newDestinationId = transactionWithUpdateData.getSourceId();
-            TransactionAccount newDestination = transactionAccountRepository.findById(newDestinationId).get();
-            transactionAccountService.checkThatTransactionAccountValidity(newDestination);
+        if (dtoDestinationId != null) {
+            TransactionAccount newDestination = transactionAccountRepository.findById(dtoDestinationId)
+                    .orElseThrow(() -> new IllegalArgumentException("This transaction account does not exist"));
+            transactionAccountService.checkThatTransactionAccountIsNotDelted(newDestination);
             transactionToUpdate.setDestination(newDestination);
         }
-        if (transactionWithUpdateData.getAmount() != null) {
-            transactionToUpdate.setAmount(transactionWithUpdateData.getAmount());
+        if (dtoAmount != null) {
+            transactionToUpdate.setAmount(dtoAmount);
         }
-        if (transactionWithUpdateData.getAmount() != null) {
-            transactionToUpdate.setAmount(transactionWithUpdateData.getAmount());
+        if (dtoTransactionDate != null) {
+            transactionToUpdate.setTransactionDate(dtoTransactionDate);
         }
-        if (transactionWithUpdateData.getTransactionDate() != null) {
-            transactionToUpdate.setTransactionDate(transactionWithUpdateData.getTransactionDate());
+        if (dtoComment != null) {
+            transactionToUpdate.setComment(dtoComment);
         }
-        if (transactionWithUpdateData.getComment() != null) {
-            transactionToUpdate.setComment(transactionWithUpdateData.getComment());
-        }
-        return transactionToUpdate;
+
     }
 
 

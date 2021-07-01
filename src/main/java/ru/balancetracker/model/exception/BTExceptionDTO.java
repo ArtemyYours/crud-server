@@ -11,7 +11,7 @@ import java.util.List;
 public class BTExceptionDTO {
     private UserErrorMessage userErrorMessage;
     private List<UserErrorMessage> userErrorMessageList;
-    private String message;
+    private final String message;
 
 
     public BTExceptionDTO(String message, UserErrorMessage userErrorMessage) {

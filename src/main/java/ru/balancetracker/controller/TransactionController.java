@@ -19,7 +19,7 @@ public class TransactionController {
 
     @SecurityConstants.PreAuthorizeUserRole
     @PostMapping("/create")
-    public Long createTransaction(@RequestBody TransactionDTO transactionDTO){
+    public Long createTransaction(@RequestBody TransactionDTO transactionDTO) {
         return service.createTransactionAndSave(transactionDTO);
     }
 
@@ -27,32 +27,30 @@ public class TransactionController {
     @PutMapping("/transactions-for-user/{itemsPerPage}/{pageNumber}")
     public List<Transaction> getTransactionsForUser(@PathVariable Integer itemsPerPage,
                                                     @PathVariable Integer pageNumber,
-                                                    @RequestBody LocalDateTime transactionDate){
+                                                    @RequestBody LocalDateTime transactionDate) {
         String userId = SecurityUtils.getCurrentUser().getId();
         return service.getTransactionsPerPage(itemsPerPage, pageNumber, userId, transactionDate);
     }
 
     @SecurityConstants.PreAuthorizeUserRole
     @DeleteMapping("/delete/{transactionId}")
-    public void deleteTransaction(@PathVariable Long transactionId){
+    public void deleteTransaction(@PathVariable Long transactionId) {
         service.deleteTransaction(transactionId);
     }
 
     @SecurityConstants.PreAuthorizeUserRole
     @PutMapping("/update/{transactionId}")
     public void update(@PathVariable Long transactionId,
-                       @RequestBody TransactionDTO transactionDTO){
+                       @RequestBody TransactionDTO transactionDTO) {
         service.updateTransaction(transactionDTO, transactionId);
     }
 
     @SecurityConstants.PreAuthorizeUserRole
     @PostMapping("/create-periodic/{timePeriod}")
     public Long createPeriodicTransaction(@PathVariable Long timePeriod,
-            @RequestBody TransactionDTO transactionDTO){
+                                          @RequestBody TransactionDTO transactionDTO) {
         return service.createPeriodicTransactionAndSave(transactionDTO, timePeriod);
     }
-
-
 
 
 }

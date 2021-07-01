@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class IconService {
-    private IconRepository repository;
+    private final IconRepository repository;
 
     public List<Icon> getAll(){
         return repository.findAll();
