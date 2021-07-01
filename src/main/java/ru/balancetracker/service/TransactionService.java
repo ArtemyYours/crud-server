@@ -5,9 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.balancetracker.exceptions.MessageCode;
 import ru.balancetracker.model.dto.TransactionDTO;
-import ru.balancetracker.model.exception.BTRestException;
 import ru.balancetracker.model.jpa.PeriodicTransaction;
 import ru.balancetracker.model.jpa.Transaction;
 import ru.balancetracker.model.jpa.TransactionAccount;
@@ -18,7 +16,6 @@ import ru.balancetracker.security.utils.SecurityUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -38,7 +35,7 @@ public class TransactionService {
      * Method is required to get list of transactions for page filling
      *
      * @param itemsPerPage    how many transactions are displayed per page
-     * @param pageNumber      which page is it
+     * @param pageNumber      which page is it, but starts from 0
      * @param userId          user, owner of transactions
      * @param transactionDate date, bellow which transactions are required
      * @return
@@ -48,7 +45,7 @@ public class TransactionService {
                                                     String userId,
                                                     LocalDateTime transactionDate) {
 
-        Pageable pageable = PageRequest.of(pageNumber - 1, itemsPerPage, Sort.by("transactionDate"));
+        Pageable pageable = PageRequest.of(pageNumber, itemsPerPage, Sort.by("transactionDate"));
 
         List<Transaction> transactions = repository.findTransactionsForUser(userId, transactionDate, pageable);
         return transactions;
@@ -63,14 +60,9 @@ public class TransactionService {
      */
     public void updateTransaction(TransactionDTO transactionDTO, Long id) {
         Transaction transactionToUpdate = repository.findById(id).get();
-        if (checkIfUserHasRightsToTransaction(transactionToUpdate)) {
-            updateFieldsIfChanged(transactionDTO, transactionToUpdate);
-            repository.save(transactionToUpdate);
-        } else {
-            throw new BTRestException(MessageCode.USER_DOESNT_HAVE_ACCESS_TO_TRANSACTION,
-                    "Current user can't modify this transaction",
-                    null);
-        }
+        updateFieldsIfChanged(transactionDTO, transactionToUpdate);
+        repository.save(transactionToUpdate);
+
     }
 
     /**
@@ -80,14 +72,8 @@ public class TransactionService {
      */
     public void deleteTransaction(Long id) {
         Transaction transactionToDelete = repository.findById(id).get();
-        if (checkIfUserHasRightsToTransaction(transactionToDelete)) {
-            transactionToDelete.setDeleted(true);
-            repository.save(transactionToDelete);
-        } else {
-            throw new BTRestException(MessageCode.USER_DOESNT_HAVE_ACCESS_TO_TRANSACTION,
-                    "Current user can't delete this transaction",
-                    null);
-        }
+        transactionToDelete.setDeleted(true);
+        repository.save(transactionToDelete);
     }
 
     public Long createPeriodicTransactionAndSave(TransactionDTO transactionDTO, Long timePeriod) {
@@ -160,11 +146,4 @@ public class TransactionService {
         Transaction transactionToSave = convertDtoToTransaction(transactionDTO);
         return repository.saveAndFlush(transactionToSave);
     }
-
-    private boolean checkIfUserHasRightsToTransaction(Transaction transaction) {
-        String userId = SecurityUtils.getCurrentUser().getId();
-        return transaction.getUserId().equals(userId);
-    }
-
-
 }

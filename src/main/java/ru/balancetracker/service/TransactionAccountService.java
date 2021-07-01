@@ -58,27 +58,16 @@ public class TransactionAccountService {
 
     public void deleteTransactionAccount(Long id){
         TransactionAccount transactionAccount = repository.findById(id).get();
-        if(checkUserRightsToTransactionAccount(transactionAccount)) {
-            transactionAccount.setDeleted(true);
-            repository.save(transactionAccount);
-        }else {
-            throw new BTRestException(MessageCode.USER_DOESNT_HAVE_ACCESS_TO_TRANSACTION_ACCOUNT,
-                    "Current user can't delete this transaction account",
-                    null);
-        }
-        }
+        transactionAccount.setDeleted(true);
+        repository.save(transactionAccount);
+    }
 
-    public void update(Long id, TransactionAccountDTO transactionAccountDTO){
+    public void update(Long id, TransactionAccountDTO transactionAccountDTO) {
         TransactionAccount transactionAccountToUpdate = repository.findById(id).get();
 
-        if(checkUserRightsToTransactionAccount(transactionAccountToUpdate)) {
-            changeFieldsIfChanged(transactionAccountDTO, transactionAccountToUpdate);
-            repository.save(transactionAccountToUpdate);
-        } else {
-            throw new BTRestException(MessageCode.USER_DOESNT_HAVE_ACCESS_TO_TRANSACTION_ACCOUNT,
-                    "Current user can't delete this transaction account",
-                    null);
-        }
+        changeFieldsIfChanged(transactionAccountDTO, transactionAccountToUpdate);
+        repository.save(transactionAccountToUpdate);
+
     }
 
     private TransactionAccount createTransactionAccount(TransactionAccountDTO transactionAccountDTO, AccountType type){
@@ -123,11 +112,6 @@ public class TransactionAccountService {
             transactionAccount.setIcon(iconRepository.findById(transactionAccountDTO.getIcon()).get());
         }
 
-    }
-
-    private boolean checkUserRightsToTransactionAccount(TransactionAccount transactionAccount){
-        String userId = SecurityUtils.getCurrentUser().getId();
-        return transactionAccount.getUserId().equals(userId);
     }
 
     public void checkThatTransactionAccountValidity(@NonNull TransactionAccount transactionAccount){
