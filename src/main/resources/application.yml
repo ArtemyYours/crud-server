@@ -4,8 +4,8 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://130.193.43.227:5000/postgres
-    username: user
-    password: 123123
+    username: balance_tracker_crud
+    password: LAkn;L-F!T9cKEN,
   jpa:
     hibernate:
       ddl-auto: update
