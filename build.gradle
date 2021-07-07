@@ -16,6 +16,14 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/balance-tracker/spring-boot-security-balance-tracker")
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getProperty("USERNAME")
+            password = project.findProperty("gpr.password") ?: System.getProperty("PASSWORD")
+        }
+    }
 }
 
 dependencies {
@@ -25,6 +33,8 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.3.9.RELEASE'
     implementation "org.springframework.boot:spring-boot-configuration-processor"
     implementation('org.springframework.boot:spring-boot-starter-security')
+
+    implementation 'ru.balancetracker:spring-boot-security-balance-tracker:0.1'
     implementation group: 'org.springframework.security.oauth.boot', name: 'spring-security-oauth2-autoconfigure', version: '2.2.4.RELEASE'
     implementation group: 'org.springframework.security', name: 'spring-security-data', version: '5.2.4.RELEASE'
     implementation group: 'org.keycloak', name: 'keycloak-spring-boot-starter', version: '10.0.1'
